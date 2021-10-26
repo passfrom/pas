@@ -1,0 +1,81 @@
+spring:
+  devtools:
+    restart:
+      enabled: true
+      additional-path: src/main
+      exclude: resources/
+    freemarker:
+      cache: false
+  datasource:
+    dynamic:
+      primary: master #设置默认的数据源或者数据源组,默认值即为master
+      strict: true #设置严格模式,默认false不启动. 启动后在未匹配到指定数据源时候会抛出异常,不启动则使用默认数据源.
+      druid:
+        initial-size: 5 # 初始化连接大小
+        min-idle: 3     # 最小空闲连接数
+        max-active: 100  # 最大连接数
+        keepAlive: true # 配置获取链接等待超时的时间
+        maxWait: 10000  # 配置间隔多久才进行一次检测,检测须要关闭的空闲链接,单位毫秒
+        timeBetweenEvictionRunsMillis: 60000 # 配置一个链接在池中最小生存的时间,单位毫秒
+        minEvictableIdleTimeMillis: 300000 # 链接检测属性配置
+        # 申请连接的时候检测，建议配置为true，不影响性能，并且保证安全性
+        test-while-idle: true
+        # 获取连接时执行检测，建议关闭，影响性能
+        test-on-borrow: false
+        # 归还连接时执行检测，建议关闭，影响性能
+        test-on-return: false
+        validationQuery: SELECT 1 FROM DUAL
+        validationQueryTimeout: 5000
+        connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=500;oracle.net.CONNECT_TIMEOUT=6000;oracle.jdbc.ReadTimeout=3600000
+        removeAbandoned: true
+        removeAbandonedTimeoutMillis: 3600000
+        #是否在自动回收超时连接的时候打印连接的超时错误
+        logAbandoned: true
+        wall:
+          comment-allow: true
+        filters: stat,wall,log4j
+      datasource:
+        master:
+          url: jdbc:oracle:thin:@localhost:1521:orcl?useCursorFetch=true
+          username: INDBADMIN_TX_P
+          password: INDBADMIN_TX_P
+          driver-class-name: oracle.jdbc.OracleDriver
+  application:
+    name: databasetest
+  freemarker:
+    suffix: .html                                # 设置模板后缀名
+    content-type: text/html                      # 设置文档类型
+    charset: UTF-8                               # 设置页面编码格式
+    cache: false                                 # 设置页面缓存
+    template-loader-path: classpath:/templates   # 设置ftl文件路径
+  mvc:
+    static-path-pattern: /static                 # 设置静态文件路径，js,css等
+
+
+server:
+  port: 9529
+  tomcat:
+    uri-encoding: UTF-8
+
+
+mybatis:
+  mapper-locations: classpath:/mapper/*.xml
+    #configuration:
+  #log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  configuration:
+    # 驼峰下划线转换
+    map-underscore-to-camel-case: true
+
+
+# 方式一
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    jdbc-type-for-null: 'null'
+
+
+logging:
+  level:
+    root: info
+
+
